@@ -1,0 +1,23 @@
+name: OPA Demo Test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  opa-demo:
+    runs-on: ubuntu-latest    # 1. 在雲端開一台 Ubuntu 虛擬機
+
+    steps:
+      - name: Checkout repo   # 2. 把你的程式抓到那台虛擬機
+        uses: actions/checkout@v4
+
+      - name: Install OPA     # 3. 幫你安裝 OPA
+        uses: open-policy-agent/setup-opa@v1
+        with:
+          version: latest
+
+      - name: Run OPA test    # 4. 跑一個小小的 OPA 測試
+        run: |
+          echo '{"method": "GET", "path": ["users"]}' > input.json
+          opa eval --input input.json 'input.method == "GET"'
